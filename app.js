@@ -5,7 +5,7 @@ const io = require('socket.io').listen(server);
 const port = 3001;
 
 const mongo = require('mongodb').MongoClient;
-
+const crypto = require('crypto');
 
 app.use(express.static('public'));
 
@@ -21,13 +21,14 @@ mongo.connect('mongodb://127.0.0.1/chatroom', function(err, client) {
 	
 	io.on('connection', function(socket) {
 		var address = socket.request.socket.remoteAddress;
+		hash = crypto.createHash('md5',address).digest('base64');
 		var chat = client.db('chats');
-		console.log('user connected, IP: ' + address);
+		console.log('SERVER: user connected, IP: ' + address);
 		socket.on('disconnect', function() {
-			console.log('user disconnected, socketId: ' + address);
+			console.log('SERVER: user disconnected, socketId: ' + address);
 		});
 		
-		chat.collection('chats').find().limit(100).sort({_id:1}).toArray(function(err, res){
+		chat.collection('chats').find({}, {time: 1, name: 1, message: 1, hash: 1}).limit(100).sort({_id:1}).toArray(function(err, res){
 			if (err) {
 				throw err;
 			}
@@ -36,16 +37,18 @@ mongo.connect('mongodb://127.0.0.1/chatroom', function(err, client) {
 		});
 		
 		socket.on('input', function(data) {
-			console.log('SERVER: input recieved from ' + socket.id + ' contents: ' + data.message);
+			console.log('SERVER: input recieved from ' + address + ' CONTENTS: ' + data.message);
 			console.log('SERVER: input processing...');
 			if (data.message == "") {
 				console.log('no message!!');
 			} else {
+				console.log('SERVER: hashed ip to: ' + hash);
 				chat.collection('chats').insertOne({
 					time: (new Date).getTime(), 
 					address: address, 
 					name: data.name,
-					message: data.message
+					message: data.message,
+					hash: hash
 					}, function() {
 					
 					console.log('SERVER: output emitted...');
@@ -53,7 +56,7 @@ mongo.connect('mongodb://127.0.0.1/chatroom', function(err, client) {
 					client.emit('output',data);
 				});
 			
-				chat.collection('chats').find().limit(1).sort({_id:-1}).toArray(function(err, res){
+				chat.collection('chats').find({}, {time: 1, name: 1, message: 1, hash: 1}).limit(1).sort({_id:-1}).toArray(function(err, res){
 					if (err) {
 						throw err;
 					}

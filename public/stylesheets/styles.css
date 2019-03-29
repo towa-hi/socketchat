@@ -49,17 +49,14 @@ body {
 	position: relative;
 	flex-direction: column;
 }
-#messages-container {
-	max-height: 20em;
+#messagesContainer {
+	height: 20em;
 	border-style: solid;
 	border-width: 1px;
 	border-color: black;
 	overflow-y: scroll;
-	min-height: 15em;
 }
 #messages {
-	
-	
 }
 #chat-input-container {
 	display: flex;
