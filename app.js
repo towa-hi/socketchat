@@ -22,6 +22,7 @@ mongo.connect('mongodb://127.0.0.1/chatroom', function(err, client) {
 	io.on('connection', function(socket) {
 		var address = socket.request.socket.remoteAddress;
 		hash = crypto.createHash('md5',address).digest('base64');
+		console.log('SERVER: hashed ip' + address + ' to: ' + hash);
 		var chat = client.db('chats');
 		console.log('SERVER: user connected, IP: ' + address);
 		socket.on('disconnect', function() {
@@ -42,7 +43,7 @@ mongo.connect('mongodb://127.0.0.1/chatroom', function(err, client) {
 			if (data.message == "") {
 				console.log('no message!!');
 			} else {
-				console.log('SERVER: hashed ip to: ' + hash);
+				
 				chat.collection('chats').insertOne({
 					time: (new Date).getTime(), 
 					address: address, 
