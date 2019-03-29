@@ -20,7 +20,7 @@ mongo.connect('mongodb://127.0.0.1/chatroom', function(err, client) {
 	console.log('MongoDB connected...');
 	
 	io.on('connection', function(socket) {
-		let chat = client.db('chats');
+		var chat = client.db('chats');
 		console.log('user connected, socketId: ' + socket.id);
 		socket.on('disconnect', function() {
 			console.log('user disconnected, socketId: ' + socket.id);
@@ -42,7 +42,7 @@ mongo.connect('mongodb://127.0.0.1/chatroom', function(err, client) {
 		socket.on('input', function(data) {
 			console.log('SERVER: input recieved from ' + socket.id + ' contents: ' + data);
 			console.log('SERVER: input processing...');
-			let message = data;
+			var message = data;
 			if (message == "") {
 				console.log('no message!!');
 			} else {
