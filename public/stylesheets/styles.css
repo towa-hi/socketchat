@@ -55,6 +55,7 @@ body {
 	border-width: 1px;
 	border-color: black;
 	overflow-y: scroll;
+	min-height: 15em;
 }
 #messages {
 	

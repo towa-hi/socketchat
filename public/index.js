@@ -3,8 +3,13 @@
 $(function(){
 	var socket = io();
 	$('form').submit(function(){
-		console.log('CLIENT: emitting: ' + $('#m').val());
-		socket.emit('input', $('#m').val());
+		var messageString = $('#m').val();
+		var data = {
+			name: 'anonymous',
+			message: messageString
+		}
+		console.log('CLIENT: emitting: ' + messageString);
+		socket.emit('input', data);
 		$('#m').val('');
 		return false;
 	});
@@ -16,15 +21,18 @@ $(function(){
 				var formattedTime = new Date(data[count].time);
 				var timeString = formattedTime.toLocaleTimeString('en-US');
 				message.setAttribute('class', 'chat-message');
-				message.textContent = timeString + ' ' + data[count].userId + ' - ' + data[count].message;
+				message.textContent = timeString + ' ' + data[count].address + ' - ' + data[count].message;
 				messages.appendChild(message);
 				messages.insertBefore(message, messages.firstChild);
 			}
 		}
 	});
-	// socket.on('chat message', function(msg){
-		// $('#messages').append($('<li>').text(msg));
-		// window.scrollTo(0, document.body.scrollheight);
-	// });
+	clear.addEventListener('click', function() {
+		socket.emit('clear');
+	});
+	
+	socket.on('cleared', function() {
+		messages.innerHTML = '';
+	});
 	
 });

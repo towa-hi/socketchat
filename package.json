@@ -9,6 +9,7 @@
   "author": "towa-hi",
   "license": "ISC",
   "dependencies": {
+    "crypto": "^1.0.1",
     "express": "^4.16.4",
     "mongodb": "^3.2.2",
     "socket.io": "^2.2.0"
