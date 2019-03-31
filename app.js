@@ -3,12 +3,12 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
 const port = 3001;
-
+const path = require('path');
 const mongo = require('mongodb').MongoClient;
 const crypto = require('crypto');
 
 app.use(express.static('public'));
-
+app.use('/img',express.static(path.join(__dirname, 'public/images/')))
 const geo = require('geoip-lite');
 
 
@@ -31,13 +31,14 @@ mongo.connect('mongodb://127.0.0.1/chatroom', { useNewUrlParser: true }, functio
 		console.log('SERVER: user connected, IP: ' + address);
 		//geolocation
 		var locationData = geo.lookup(address);
+		console.log(locationData);
 		var state = null;
+		var country = null;
 		if (locationData != null) {
-			state = geo.lookup(address).region;
+			state = locationData.region;
+			country = locationData.country;
 			console.log('SERVER: connected from ' + state);
-		} else {
-			state = 'DC';
-		}
+		} 
 		//on disconnect
 		socket.on('disconnect', function() {
 			console.log('SERVER: user disconnected, socketId: ' + address);
@@ -63,7 +64,8 @@ mongo.connect('mongodb://127.0.0.1/chatroom', { useNewUrlParser: true }, functio
 					name: data.name,
 					message: data.message,
 					hash: hash,
-					state: state
+					state: state,
+					country: country
 				};
 				//insert to mongodb
 				chat.collection('chats').insertOne(messageObject);

@@ -24,8 +24,16 @@ $(function(){
 				var message = document.createElement('div');
 				var formattedTime = new Date(data[count].time);
 				var timeString = formattedTime.toLocaleTimeString('en-US');
+				//var flagString = '<img src="http://127.0.0.1:8080/' + data[count].state.toLowerCase() + '.png">'
+				//var flagString = data[count].state + ' ' + data[count].country;
+				var flagString = '<img style="vertical-align:middle; border:1px solid" src="http://127.0.0.1:8080/countries/ad.png">';
+				if (data[count].country == 'US') {
+					flagString = '<img style="vertical-align:middle; border:1px solid" src="http://127.0.0.1:8080/states/' + data[count].state.toLowerCase() + '.png">';
+				} else if (data[count].country != null){
+					flagString = '<img style="vertical-align:middle; border:1px solid" src="http://127.0.0.1:8080/countries/' + data[count].country.toLowerCase() + '.png">';
+				}
 				message.setAttribute('class', 'chat-message');
-				message.textContent = timeString + ' ' + data[count].hash + ': ' + data[count].message;
+				message.innerHTML = timeString + ' ' + flagString + ': ' + data[count].message;
 				messages.appendChild(message);
 				console.log('CLIENT DEBUG: message:' + data[count].message);
 			}
