@@ -27,16 +27,22 @@ mongo.connect('mongodb://127.0.0.1/chatroom', { useNewUrlParser: true }, functio
 	io.on('connection', function(socket) {
 		var address = socket.request.socket.remoteAddress;
 		var hash = crypto.createHash('md5').update(address).digest('base64');
-		var state = geo.lookup(address).region;
-		console.log('SERVER: connected from ' + state);
 		console.log('SERVER: hashed ip' + address + ' to: ' + hash);
 		console.log('SERVER: user connected, IP: ' + address);
-		
-		
+		//geolocation
+		var locationData = geo.lookup(address);
+		var state = null;
+		if (locationData != null) {
+			state = geo.lookup(address).region;
+			console.log('SERVER: connected from ' + state);
+		} else {
+			state = 'DC';
+		}
+		//on disconnect
 		socket.on('disconnect', function() {
 			console.log('SERVER: user disconnected, socketId: ' + address);
 		});
-		
+		//output previous messages for connecting user
 		chat.collection('chats').find({}, {time: 1, name: 1, message: 1, hash: 1}).limit(100).sort({_id:1}).toArray(function(err, res){
 			if (err) {
 				throw err;
@@ -44,27 +50,35 @@ mongo.connect('mongodb://127.0.0.1/chatroom', { useNewUrlParser: true }, functio
 			console.log('SERVER: emitting entire chat.collection');
 			socket.emit('output',res);
 		});
-		
+		//on input
 		socket.on('input', function(data) {
 			console.log('SERVER: 1. input recieved from ' + address + ' CONTENTS: ' + data.message);
 			if (data.message == "") {
 				console.log('SERVER: 2. no message detected');
 			} else {
-				console.log('SERVER:  3. inserting post')
-				chat.collection('chats').insertOne({
-					time: (new Date).getTime(), 
-					address: address, 
+				console.log('SERVER: 2. inserting post')
+				var messageObject = {
+					time: (new Date).getTime(),
+					address: address,
 					name: data.name,
 					message: data.message,
-					hash: hash
-					});
-				chat.collection('chats').find({}, {time: 1, name: 1, message: 1, hash: 1}).limit(1).sort({_id:-1}).toArray(function(err, res){
-					if (err) {
-						throw err;
-					}
-					console.log('SERVER: emitting  chat.collection to everyone');
-					io.emit('output',res);
-				});
+					hash: hash,
+					state: state
+				};
+				//insert to mongodb
+				chat.collection('chats').insertOne(messageObject);
+				//NEW: send this thing out 
+				var messageObjectArray = [messageObject]
+				io.emit('output',messageObjectArray);
+				console.log('SERVER: 3. emitting  chat.collection to everyone');
+				//OLD: retrieve latest and send to all
+				// chat.collection('chats').find({}, {time: 1, name: 1, message: 1, hash: 1}).limit(1).sort({_id:-1}).toArray(function(err, res){
+					// if (err) {
+						// throw err;
+					// }
+					// console.log('SERVER: 3. emitting  chat.collection to everyone');
+					// io.emit('output',res);
+				// });
 			}
 		});
 		
