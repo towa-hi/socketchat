@@ -27,7 +27,7 @@ mongo.connect('mongodb://127.0.0.1/chatroom', { useNewUrlParser: true }, functio
 	io.on('connection', function(socket) {
 		var address = socket.request.socket.remoteAddress;
 		var hash = crypto.createHash('md5').update(address).digest('base64');
-		var state = geo.lookup('107.242.120.43').region;
+		var state = geo.lookup(address).region;
 		console.log('SERVER: connected from ' + state);
 		console.log('SERVER: hashed ip' + address + ' to: ' + hash);
 		console.log('SERVER: user connected, IP: ' + address);
