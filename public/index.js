@@ -35,8 +35,9 @@ $(function(){
 				if (data[count].country != null){
 					flagString = '<img style="vertical-align:middle" src="https://kohlchan.net/static/flags/' + data[count].country.toLowerCase() + '.png">';
 				}
+				var hashString = data[count].hash.substring(0,5);
 				message.setAttribute('class', 'chat-message');
-				message.innerHTML = timeString + ' ' + flagString + ': ' + data[count].message;
+				message.innerHTML = timeString + ' ' + flagString + ' ' + hashString + ': ' + data[count].message;
 				messages.appendChild(message);
 				console.log('CLIENT DEBUG: message:' + data[count].message);
 			}
