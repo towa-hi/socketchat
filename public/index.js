@@ -28,9 +28,9 @@ $(function(){
 				//var flagString = data[count].state + ' ' + data[count].country;
 				var flagString = '<img style="vertical-align:middle; border:1px solid" src="http://127.0.0.1:8080/countries/ad.png">';
 				if (data[count].country == 'US') {
-					flagString = '<img style="vertical-align:middle; border:1px solid" src="http://127.0.0.1:8080/states/' + data[count].state.toLowerCase() + '.png">';
+					flagString = '<img style="vertical-align:middle; border:1px solid" src="http://18.218.147.148:8080' + data[count].state.toLowerCase() + '.png">';
 				} else if (data[count].country != null){
-					flagString = '<img style="vertical-align:middle; border:1px solid" src="http://127.0.0.1:8080/countries/' + data[count].country.toLowerCase() + '.png">';
+					flagString = '<img style="vertical-align:middle; border:1px solid" src="http://18.218.147.148:8080' + data[count].country.toLowerCase() + '.png">';
 				}
 				message.setAttribute('class', 'chat-message');
 				message.innerHTML = timeString + ' ' + flagString + ': ' + data[count].message;
