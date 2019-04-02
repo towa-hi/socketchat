@@ -3,14 +3,18 @@ $(function(){
 	$('form').submit(function(){
 		var messageString = $('#m').val();
 		if (messageString != ''){
-			var data = {
-				name: 'Anonymous',
-				message: messageString
+			if (messageString.length <= 100) {
+				var data = {
+					name: 'Anonymous',
+					message: messageString
+				}
+				console.log('CLIENT: emitting: ' + messageString);
+				socket.emit('input', data);
+				$('#m').val('');
+				return false;
+			} else {
+				alert("message too long!!");
 			}
-			console.log('CLIENT: emitting: ' + messageString);
-			socket.emit('input', data);
-			$('#m').val('');
-			return false;
 		}
 	});
 	socket.on('output', function(data) {
@@ -32,7 +36,26 @@ $(function(){
 				}
 				var hashString = data[count].hash.substring(0,5);
 				message.setAttribute('class', 'chat-message');
-				message.innerHTML = timeString + ' ' + flagString + ' ' + hashString + ': ' + data[count].message;
+				var postInfoElement = document.createElement('div');
+				postInfoElement.setAttribute('class', 'chat-message-info');
+				var dateElement = document.createElement('div');
+				dateElement.setAttribute('class', 'chat-date-info');
+				dateElement.innerHTML = timeString;
+				postInfoElement.appendChild(dateElement);
+				var flagElement = document.createElement('div');
+				flagElement.setAttribute('class', 'chat-flag-info');
+				flagElement.innerHTML = flagString;
+				postInfoElement.appendChild(flagElement);
+				var nameElement = document.createElement('div');
+				nameElement.setAttribute('class', 'chat-name-info');
+				nameElement.innerHTML = hashString + ':';
+				postInfoElement.appendChild(nameElement);
+				var messageElement = document.createElement('div');
+				messageElement.setAttribute('class', 'chat-message-contents');
+				messageElement.innerHTML = data[count].message;
+				//message.innerHTML = dateElement.toString() + flagElement + nameElement + messageElement;
+				message.appendChild(postInfoElement);
+				message.appendChild(messageElement);
 				messages.appendChild(message);
 				console.log('CLIENT DEBUG: message:' + data[count].message);
 			}

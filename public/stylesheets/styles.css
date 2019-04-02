@@ -55,6 +55,7 @@ body {
 	border-width: 1px;
 	border-color: black;
 	overflow-y: scroll;
+	overflow-x: hidden;
 }
 #messages {
 }
@@ -67,4 +68,31 @@ body {
 }
 #m {
 	width: 100%;
+}
+.chat-message {
+	display: flex;
+}
+.chat-message-info {
+	display: flex;
+	background: #f4f4f4;
+}
+.chat-date-info {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	min-width: 7em;
+	background: #f4f4f4;
+	text-align: center;
+}
+.chat-flag-info {
+}
+.chat-name-info {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	font-weight: bold;
+}
+.chat-message-contents {
+	background: white;
+	flex-grow: 2;
+	word-wrap: break-word !important;
+	hyphens: auto;
 }
