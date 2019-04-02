@@ -28,11 +28,10 @@ mongo.connect('mongodb://127.0.0.1/chatroom', { useNewUrlParser: true }, functio
 		//MAKE SURE TO SWITCH THIS BEFORE U COMMIT
 		//var address = socket.request.socket.remoteAddress;
 		var address = socket.handshake.headers['x-real-ip']; 
-		console.log('socketid:' + socket.id);
 		//console.log(socket.handshake.headers);
 		var hash = crypto.createHash('md5').update(address).digest('base64');
 		console.log('SERVER: hashed ip' + address + ' to: ' + hash);
-		console.log('SERVER: user connected, IP: ' + address + ' number of users connected: ' + userList.length);
+		
 		//geolocation
 		var locationData = geo.lookup(address);
 		//console.log(locationData);
@@ -53,7 +52,7 @@ mongo.connect('mongodb://127.0.0.1/chatroom', { useNewUrlParser: true }, functio
 		};
 		userList.push(userObject);
 		io.emit('refresh user list', userList);
-
+		console.log('SERVER: user connected, IP: ' + address + ' number of users connected: ' + userList.length);
 		//on disconnect
 		socket.on('disconnect', function() {
 			var index = userList.indexOf(userObject);

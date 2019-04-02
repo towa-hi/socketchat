@@ -3,10 +3,30 @@
 	<head>
 		<title>Chat App</title>
 		<link rel="stylesheet" href="/stylesheets/styles.css">
+        <style media="screen">
+            #background {
+				overflow-y: hidden;
+				position:fixed;
+				height: 100%;
+				min-width:100%;
+                background-image: url("demo.jpg");
+                background-size: cover;
+            }
+        </style>
+        <script src="./js/rainyday.min.js"></script>
+        <script>
+            function run() {
+                var rainyDay = new RainyDay({
+                    image: 'background' // Target p element with ID, RainyDay.js will use backgorund image to simulate rain effects.
+                });
+                
+            }
+        </script>
 	</head>
-	<body>
+    <body onload="run();" id="background">
+	<div id="body-wrapper">
 		<div id="banner">
-			<h1>Welcome to Mono Land</h1>
+			<h1>Welcome to Mono World</h1>
 		</div>
 		<div id="content-wrapper">
 			<div id="text-box" class="content-box">
@@ -31,6 +51,7 @@
 				</div>
 			</div>
 		</div>
+	</div>
 	</body>
 	<button id="clear">Clear</button> Please don't press this button. It clears the database
 	<script src="/socket.io/socket.io.js"></script>
