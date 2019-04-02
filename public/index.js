@@ -4,7 +4,7 @@ $(function(){
 		e.preventDefault();
 		var messageString = $('#m').val();
 		if (messageString != ''){
-			if (messageString.length <= 100) {
+			if (messageString.length <= 300) {
 				var data = {
 					name: 'Anonymous',
 					message: messageString
