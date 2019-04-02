@@ -58,7 +58,7 @@ $(function(){
 				message.appendChild(postInfoElement);
 				message.appendChild(messageElement);
 				messages.appendChild(message);
-				console.log('CLIENT DEBUG: message:' + data[count].message);
+				//console.log('CLIENT DEBUG: message:' + data[count].message);
 			}
 		}
 		shouldScroll = messagesContainer.scrollTop + messagesContainer.clientHeight === messagesContainer.scrollHeight;
@@ -70,13 +70,42 @@ $(function(){
 	// clear.addEventListener('click', function() {
 		// socket.emit('clear');
 	// });
-	
+	socket.on('refresh user list', function(data) {
+		userlist.innerHTML = '';
+		for (var count = 0; count < data.length; count++) {
+			var flagString = '<img style="vertical-align:middle" src="http://18.218.147.148:8080/countryballs/unknown.png">';
+			if (data.country != null){
+				flagString = '<img style="vertical-align:middle" src="http://18.218.147.148:8080/countryballs/' + data[count].country.toLowerCase() + '.png">';
+			}
+			var userElement = document.createElement('div');
+			userElement.setAttribute('class', 'user-info');
+			userElement.setAttribute('name', data[count].socket);
+			var flagElement = document.createElement('div');
+			flagElement.setAttribute('class', 'chat-flag-info');
+			flagElement.innerHTML = flagString;
+			userElement.appendChild(flagElement);
+			var nameElement = document.createElement('div');
+			nameElement.setAttribute('class','chat-name-info');
+			nameElement.innerHTML = data[count].hash.substring(0,5);
+			userElement.appendChild(nameElement);
+			userlist.appendChild(userElement);
+			console.log('CLIENT DEBUG: added user with socketid:' + socket.sessionid);
+		}
+	});
+	// socket.on('a user disconnected', function(data) {
+		// userlist.innerHTML = '';
+	// });
 	socket.on('cleared', function() {
 		messages.innerHTML = '';
+		
 	});
 	
 });
-
+function refreshUserList(data) {
+	
+	
+	
+}
 function scrollToBottom() {
 	messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }

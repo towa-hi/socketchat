@@ -11,7 +11,7 @@ app.use(express.static('public'));
 app.use('/img',express.static(path.join(__dirname, 'public/images/')))
 const geo = require('geoip-lite');
 
-
+var userList = [];
 
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/public/index.html')
@@ -25,15 +25,17 @@ mongo.connect('mongodb://127.0.0.1/chatroom', { useNewUrlParser: true }, functio
 	var chat = client.db('chats');
 	console.log('SERVER: chats made');
 	io.on('connection', function(socket, req) {
-		//var address = socket.request.socket.remoteAddress;
-		var address = socket.handshake.headers['x-real-ip']; 
-		console.log(socket.handshake.headers);
+		//MAKE SURE TO SWITCH THIS BEFORE U COMMIT
+		var address = socket.request.socket.remoteAddress;
+		//var address = socket.handshake.headers['x-real-ip']; 
+		console.log('socketid:' + socket.id);
+		//console.log(socket.handshake.headers);
 		var hash = crypto.createHash('md5').update(address).digest('base64');
 		console.log('SERVER: hashed ip' + address + ' to: ' + hash);
 		console.log('SERVER: user connected, IP: ' + address);
 		//geolocation
 		var locationData = geo.lookup(address);
-		console.log(locationData);
+		//console.log(locationData);
 		var state = null;
 		var country = null;
 		if (locationData != null) {
@@ -41,10 +43,27 @@ mongo.connect('mongodb://127.0.0.1/chatroom', { useNewUrlParser: true }, functio
 			country = locationData.country;
 			console.log('SERVER: connected from ' + state);
 		} 
+		
+		//add to userlist
+		var userObject = {
+			address: address,
+			country: country,
+			hash: hash.substring(0,5),
+			socket: socket.id
+		};
+		userList.push(userObject);
+		io.emit('refresh user list', userList);
+
 		//on disconnect
 		socket.on('disconnect', function() {
-			console.log('SERVER: user disconnected, socketId: ' + address);
+			var index = userList.indexOf(userObject);
+			userList.splice(index, 1);
+			io.emit('refresh user list', userList);
+
 		});
+		//output known users for connecting user
+		socket.emit('a user connected', userList);
+		
 		//output previous messages for connecting user
 		chat.collection('chats').find({}, {time: 1, name: 1, message: 1, hash: 1}).limit(100).sort({_id:1}).toArray(function(err, res){
 			if (err) {

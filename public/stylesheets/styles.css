@@ -26,7 +26,6 @@ body {
     }
 #banner {
     display: block;
-    background-color: white;
     border-style: solid;
     border-width: 1px;
     border-color: black;
@@ -49,8 +48,17 @@ body {
 	position: relative;
 	flex-direction: column;
 }
+#userlist {
+	background: #ffffff;
+	min-width: 100%;
+	position: relative;
+	flex-direction: column;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	height: 100%;
+}
 #messagesContainer {
-	height: 20em;
+	height: 25em;
 	border-style: solid;
 	border-width: 1px;
 	border-color: black;
@@ -95,4 +103,7 @@ body {
 	flex-grow: 2;
 	word-wrap: break-word !important;
 	hyphens: auto;
+}
+.user-info {
+	display: flex;
 }
