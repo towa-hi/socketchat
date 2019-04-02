@@ -69,21 +69,13 @@ mongo.connect('mongodb://127.0.0.1/chatroom', { useNewUrlParser: true }, functio
 				};
 				//insert to mongodb
 				chat.collection('chats').insertOne(messageObject);
-				//NEW: send this thing out 
+				//wrap messageObject in array and emit out 
 				var messageObjectArray = [messageObject]
 				io.emit('output',messageObjectArray);
 				console.log('SERVER: 3. emitting  chat.collection to everyone');
-				//OLD: retrieve latest and send to all
-				// chat.collection('chats').find({}, {time: 1, name: 1, message: 1, hash: 1}).limit(1).sort({_id:-1}).toArray(function(err, res){
-					// if (err) {
-						// throw err;
-					// }
-					// console.log('SERVER: 3. emitting  chat.collection to everyone');
-					// io.emit('output',res);
-				// });
 			}
 		});
-		
+		//on clear drop db
 		socket.on('clear', function(data){
 			console.log('SERVER: database cleared!!!');
 			chat.collection('chats').drop(function() {
@@ -93,10 +85,6 @@ mongo.connect('mongodb://127.0.0.1/chatroom', { useNewUrlParser: true }, functio
 		});
 	});
 });
-
-
-
-
 
 server.listen(port, function() {
 	console.log(`listening on port ${port}`)
