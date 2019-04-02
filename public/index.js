@@ -28,7 +28,7 @@ $(function(){
 				//var flagString = data[count].state + ' ' + data[count].country;
 				var flagString = '<img style="vertical-align:middle" src="http://18.218.147.148:8080/countryballs/unknown.png">';
 				if (data[count].country != null){
-					flagString = '<img style="vertical-align:middle; border:1px solid" src="http://18.218.147.148:8080/countryballs/' + data[count].country.toLowerCase() + '.png">';
+					flagString = '<img style="vertical-align:middle" src="http://18.218.147.148:8080/countryballs/' + data[count].country.toLowerCase() + '.png">';
 				}
 				var hashString = data[count].hash.substring(0,5);
 				message.setAttribute('class', 'chat-message');
