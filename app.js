@@ -24,8 +24,10 @@ mongo.connect('mongodb://127.0.0.1/chatroom', { useNewUrlParser: true }, functio
 	console.log('MongoDB connected...');
 	var chat = client.db('chats');
 	console.log('SERVER: chats made');
-	io.on('connection', function(socket) {
-		var address = socket.request.socket.remoteAddress;
+	io.on('connection', function(socket, req) {
+		//var address = socket.request.socket.remoteAddress;
+		var address = socket.handshake.headers['x-real-ip']; 
+		console.log(socket.handshake.headers);
 		var hash = crypto.createHash('md5').update(address).digest('base64');
 		console.log('SERVER: hashed ip' + address + ' to: ' + hash);
 		console.log('SERVER: user connected, IP: ' + address);
