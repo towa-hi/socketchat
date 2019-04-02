@@ -74,7 +74,7 @@ $(function(){
 		userlist.innerHTML = '';
 		for (var count = 0; count < data.length; count++) {
 			var flagString = '<img style="vertical-align:middle" src="http://18.218.147.148:8080/countryballs/unknown.png">';
-			if (data.country != null){
+			if (data[count].country != null){
 				flagString = '<img style="vertical-align:middle" src="http://18.218.147.148:8080/countryballs/' + data[count].country.toLowerCase() + '.png">';
 			}
 			var userElement = document.createElement('div');
