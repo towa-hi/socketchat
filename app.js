@@ -32,7 +32,7 @@ mongo.connect('mongodb://127.0.0.1/chatroom', { useNewUrlParser: true }, functio
 		//console.log(socket.handshake.headers);
 		var hash = crypto.createHash('md5').update(address).digest('base64');
 		console.log('SERVER: hashed ip' + address + ' to: ' + hash);
-		console.log('SERVER: user connected, IP: ' + address);
+		console.log('SERVER: user connected, IP: ' + address + ' number of users connected: ' + userList.length);
 		//geolocation
 		var locationData = geo.lookup(address);
 		//console.log(locationData);
@@ -59,10 +59,8 @@ mongo.connect('mongodb://127.0.0.1/chatroom', { useNewUrlParser: true }, functio
 			var index = userList.indexOf(userObject);
 			userList.splice(index, 1);
 			io.emit('refresh user list', userList);
-
+			console.log('SERVER: user disconnected, IP: ' + address + ' number of users connected: ' + userList.length);
 		});
-		//output known users for connecting user
-		socket.emit('a user connected', userList);
 		
 		//output previous messages for connecting user
 		chat.collection('chats').find({}, {time: 1, name: 1, message: 1, hash: 1}).limit(100).sort({_id:1}).toArray(function(err, res){
