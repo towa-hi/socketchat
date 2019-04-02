@@ -30,7 +30,7 @@ $(function(){
 				// if (data[count].country == 'US') {
 					// flagString = '<img style="vertical-align:middle; border:1px solid" src="http://18.218.147.148:8080/states/' + data[count].state.toLowerCase() + '.png">';
 				// } else if (data[count].country != null){
-					// flagString = '<img style="vertical-align:middle; border:1px solid" src="https://kohlchan.net/static/flags/' + data[count].country.toLowerCase() + '.png">';
+					// flagString = '<img style="vertical-align:middle; border:1px solid" src="http://18.218.147.148:8080/countries/' + data[count].country.toLowerCase() + '.png">';
 				// }
 				if (data[count].country != null){
 					flagString = '<img style="vertical-align:middle" src="https://kohlchan.net/static/flags/' + data[count].country.toLowerCase() + '.png">';
