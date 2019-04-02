@@ -1,6 +1,7 @@
 $(function(){
 	var socket = io();
-	$('form').submit(function(){
+	$('form').submit(function(e){
+		e.preventDefault();
 		var messageString = $('#m').val();
 		if (messageString != ''){
 			if (messageString.length <= 100) {
